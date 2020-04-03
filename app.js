@@ -31,21 +31,22 @@ const eatFood = new Item ({
   name: "Eat Food"
 });
 
-// Item.insertMany([buyFood, cookFood, eatFood], function(err){
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log("Succesfully logged all the list items!");
-//   }
-// });
+const defaultItems = [buyFood, cookFood, eatFood];
 
-Item.find({}, function(err, foundItems){
-  console.log(foundItems);
-});
 
 app.get("/", function(req, res){
   Item.find({}, function(err, foundItems){
-    res.render('list', {listTitle: "Today", newListItems: foundItems});
+    if (foundItems.length === 0) {
+      Item.insertMany([buyFood, cookFood, eatFood], function(err){
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Succesfully logged all the list items!");
+        }
+      });
+    } else {
+      res.render('list', {listTitle: "Today", newListItems: foundItems});
+    }
   });
 });
 
