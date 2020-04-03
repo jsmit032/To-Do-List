@@ -31,16 +31,22 @@ const eatFood = new Item ({
   name: "Eat Food"
 });
 
-Item.insertMany([buyFood, cookFood, eatFood], function(err){
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Succesfully logged all the list items!");
-  }
+// Item.insertMany([buyFood, cookFood, eatFood], function(err){
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("Succesfully logged all the list items!");
+//   }
+// });
+
+Item.find({}, function(err, foundItems){
+  console.log(foundItems);
 });
 
 app.get("/", function(req, res){
-  res.render('list', {listTitle: "Today", newListItems: items});
+  Item.find({}, function(err, foundItems){
+    res.render('list', {listTitle: "Today", newListItems: foundItems});
+  });
 });
 
 app.post("/", function(req, res){
@@ -61,4 +67,8 @@ app.get('/work', function(req, res){
 
 app.get('/about', function(req, res){
   res.render("about");
+});
+
+app.listen(3000, function(){
+  console.log("Server started on port 3000.");
 });
