@@ -52,16 +52,26 @@ app.get("/", function(req, res){
 });
 
 app.post("/", function(req, res){
-  const item = req.body.newItem;
+  const itemName = req.body.newItem;
 
-  if (req.body.list === "Work List") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    items.push(item);
-    res.redirect("/");
-  }
+  var newItem = new Item({ name: itemName });
+  newItem.save(function(err){
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/");
+    }
+  });
+
 });
+
+// Person.updateOne({ name: "John"}, { favoriteFruit: blueberries }, function(err){
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("Succesfully updated the fruit!");
+//   }
+// });
 
 app.get('/work', function(req, res){
   res.render('list', {listTitle: "Work List", newListItems: workItems});
