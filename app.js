@@ -19,31 +19,32 @@ const itemSchema = new mongoose.Schema({
 
 const Item = mongoose.model("Item", itemSchema);
 
-const buyFood = new Item ({
-  name: "Buy Food"
+const item1 = new Item ({
+  name: "Welcome to your todolist!"
 });
 
-const cookFood = new Item ({
-  name: "Cook Food"
+const item2 = new Item ({
+  name: "Hit the + button to add a new item."
 });
 
-const eatFood = new Item ({
-  name: "Eat Food"
+const item3 = new Item ({
+  name: "<-- Hit this button to cross off an item."
 });
 
-const defaultItems = [buyFood, cookFood, eatFood];
+const defaultItems = [item1, item2, item3];
 
 
 app.get("/", function(req, res){
   Item.find({}, function(err, foundItems){
     if (foundItems.length === 0) {
-      Item.insertMany([buyFood, cookFood, eatFood], function(err){
+      Item.insertMany(defaultItems, function(err){
         if (err) {
           console.log(err);
         } else {
-          console.log("Succesfully logged all the list items!");
+          console.log("Succesfully saved default items to DB!");
         }
       });
+      res.redirect("/");
     } else {
       res.render('list', {listTitle: "Today", newListItems: foundItems});
     }
