@@ -59,7 +59,7 @@ app.get("/", function(req, res){
 });
 
 app.get('/:listName', function(req, res){
-  const requestedName = _.lowerCase(req.params.listName);
+  const requestedName = _.capitalize(req.params.listName);
 
   List.findOne({ name: requestedName }, function(err, foundList){
     if (!err) {
@@ -77,7 +77,7 @@ app.get('/:listName', function(req, res){
         res.redirect("/" + requestedName);
       } else {
         res.render("list", {
-          listTitle: _.startCase(_.toLower(foundList.name)),
+          listTitle: foundList.name,
           newListItems: foundList.items
         });
       }
@@ -88,7 +88,7 @@ app.get('/:listName', function(req, res){
 
 app.post("/", function(req, res){
   const itemName = req.body.newItem;
-  const listName = _.lowerCase(req.body.list);
+  const listName = req.body.list;
 
   var newItem = new Item({ name: itemName });
 
@@ -112,7 +112,7 @@ app.post("/", function(req, res){
 
 app.post("/delete", function(req, res){
   const checkedItemId = req.body.checkbox;
-  const listName = _.lowerCase(req.body.listName);
+  const listName = req.body.listName;
 
   if (listName === "Today") {
     Item.findByIdAndRemove(checkedItemId, {useFindAndModify: false}, function(err){
