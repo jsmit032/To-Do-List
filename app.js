@@ -63,30 +63,43 @@ app.get("/", function(req, res){
 
 app.get('/:listName', function(req, res){
   const requestedName = _.lowerCase(req.params.listName);
-  // const list = new List({
-  //   name: requestedName,
-  //   items: defaultItems
-  // });
-  //
-  // list.save(function(err){
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  // });
 
-  List.find({}, function(err, foundLists){
-    foundLists.forEach(function(list){
-      const listName = _.lowerCase(list.name);
-      if (requestedName == listName) {
-        console.log("It's a Match!");
-        res.render("list", {
-          listTitle: list.name,
-          newListItems: list.items
+  List.findOne({ name: requestedName }, function(err, foundList){
+    if (!err) {
+      if (!foundList) {
+        const list = new List({
+          name: requestedName,
+          items: defaultItems
         });
-        return;
+
+        list.save(function(err){
+          if (err) {
+            console.log(err);
+          }
+        });
+        res.redirect("/" + requestedName);
+      } else {
+        res.render("list", {
+          listTitle: foundList.name,
+          newListItems: foundList.items
+        });
       }
-    });
+    }
   });
+
+  // List.find({}, function(err, foundLists){
+  //   foundLists.forEach(function(list){
+  //     const listName = _.lowerCase(list.name);
+  //     if (requestedName == listName) {
+  //       console.log("It's a Match!");
+  //       res.render("list", {
+  //         listTitle: list.name,
+  //         newListItems: list.items
+  //       });
+  //       return;
+  //     }
+  //   });
+  // }); // end List.find()
 
 });
 
