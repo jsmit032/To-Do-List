@@ -58,9 +58,6 @@ app.get("/", function(req, res){
   });
 });
 
-// create dynamic route to create a whole new list page
-// by typing in a new url address
-
 app.get('/:listName', function(req, res){
   const requestedName = _.lowerCase(req.params.listName);
 
@@ -87,33 +84,30 @@ app.get('/:listName', function(req, res){
     }
   });
 
-  // List.find({}, function(err, foundLists){
-  //   foundLists.forEach(function(list){
-  //     const listName = _.lowerCase(list.name);
-  //     if (requestedName == listName) {
-  //       console.log("It's a Match!");
-  //       res.render("list", {
-  //         listTitle: list.name,
-  //         newListItems: list.items
-  //       });
-  //       return;
-  //     }
-  //   });
-  // }); // end List.find()
-
 });
 
 app.post("/", function(req, res){
   const itemName = req.body.newItem;
+  const listName = req.body.list;
 
   var newItem = new Item({ name: itemName });
-  newItem.save(function(err){
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect("/");
-    }
-  });
+
+  if (listName === "Today") {
+    newItem.save(function(err){
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/");
+      }
+    });
+  } else {
+    List.findOne({ name: listName }, function(err, foundList){
+      foundList.items.push(newItem);
+      foundList.save();
+      res.redirect("/"+ listName);
+    });
+  }
+
 });
 
 app.post("/delete", function(req, res){
