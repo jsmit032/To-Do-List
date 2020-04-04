@@ -77,7 +77,7 @@ app.get('/:listName', function(req, res){
         res.redirect("/" + requestedName);
       } else {
         res.render("list", {
-          listTitle: foundList.name,
+          listTitle: _.startCase(_.toLower(foundList.name)),
           newListItems: foundList.items
         });
       }
