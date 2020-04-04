@@ -18,8 +18,6 @@ const end = "@cluster0-kzvpn.mongodb.net/";
 const database = "todolistDB";
 const pw = process.env.PASSWORD;
 
-console.log(login + pw + end + database);
-
 mongoose.connect(login + pw + end + database, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const itemSchema = new mongoose.Schema({
@@ -145,6 +143,11 @@ app.get('/about', function(req, res){
   res.render("about");
 });
 
-app.listen(3000, function(){
-  console.log("Server started on port 3000.");
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function(){
+  console.log("Server has started succesfully.");
 });
