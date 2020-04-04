@@ -64,6 +64,20 @@ app.post("/", function(req, res){
   });
 });
 
+app.post("/delete", function(req, res){
+  const completeTask = req.body.checkbox;
+
+  Item.deleteOne({ _id: completeTask }, function(err){
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Succesfully deleted task!");
+      res.redirect("/");
+    }
+  });
+
+});
+
 app.get('/work', function(req, res){
   res.render('list', {listTitle: "Work List", newListItems: workItems});
 });
