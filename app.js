@@ -28,7 +28,7 @@ const item2 = new Item ({
 });
 
 const item3 = new Item ({
-  name: "<-- Hit this button to cross off an item."
+  name: "<-- Hit this button to delete an item."
 });
 
 const defaultItems = [item1, item2, item3];
@@ -62,16 +62,7 @@ app.post("/", function(req, res){
       res.redirect("/");
     }
   });
-
 });
-
-// Person.updateOne({ name: "John"}, { favoriteFruit: blueberries }, function(err){
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log("Succesfully updated the fruit!");
-//   }
-// });
 
 app.get('/work', function(req, res){
   res.render('list', {listTitle: "Work List", newListItems: workItems});
