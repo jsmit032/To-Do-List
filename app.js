@@ -65,13 +65,12 @@ app.post("/", function(req, res){
 });
 
 app.post("/delete", function(req, res){
-  const completeTask = req.body.checkbox;
+  const checkedItemId = req.body.checkbox;
 
-  Item.deleteOne({ _id: completeTask }, function(err){
+  Item.findByIdAndRemove(checkedItemId, {useFindAndModify: false}, function(err){
     if (err) {
       console.log(err);
     } else {
-      console.log("Succesfully deleted task!");
       res.redirect("/");
     }
   });
