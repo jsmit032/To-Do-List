@@ -88,7 +88,7 @@ app.get('/:listName', function(req, res){
 
 app.post("/", function(req, res){
   const itemName = req.body.newItem;
-  const listName = req.body.list;
+  const listName = _.lowerCase(req.body.list);
 
   var newItem = new Item({ name: itemName });
 
@@ -112,15 +112,25 @@ app.post("/", function(req, res){
 
 app.post("/delete", function(req, res){
   const checkedItemId = req.body.checkbox;
+  const listName = _.lowerCase(req.body.listName);
 
-  Item.findByIdAndRemove(checkedItemId, {useFindAndModify: false}, function(err){
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect("/");
-    }
-  });
-
+  if (listName === "Today") {
+    Item.findByIdAndRemove(checkedItemId, {useFindAndModify: false}, function(err){
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/");
+      }
+    });
+  } else {
+    List.findOneAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId }}}, {useFindAndModify: false}, function(err, foundList){
+      if (!err){
+        res.redirect("/" + listName);
+      } else {
+        console.log(err);
+      }
+    });
+  }
 });
 
 app.get('/about', function(req, res){
