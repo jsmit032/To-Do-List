@@ -14,7 +14,7 @@ What things you need to run this app and how to install them
 * You'll also need to install Mongodb on your computer
 Click [here](https://www.mongodb.com/download-center/community) for installation instructions.
 
-#### Optional 
+#### Optional
 * [Homebrew](https://brew.sh/) - makes for installing packages onto macOS or Linex much easier!
 
 ### Installing
@@ -29,7 +29,7 @@ Fork this repo to your GitHub account, and then clone to your computer using htt
 git clone https://github.com/jsmit032/To-Do-List.git
 ```
 
-> update and install this package first
+> update and install this package first - if you're using Homebrew
 ```
 brew update
 ```
