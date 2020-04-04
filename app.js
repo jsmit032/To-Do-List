@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 const app = express();
 
@@ -33,6 +34,12 @@ const item3 = new Item ({
 
 const defaultItems = [item1, item2, item3];
 
+const listSchema = {
+  name: String,
+  items: [itemSchema]
+}
+
+const List = mongoose.model("List", listSchema);
 
 app.get("/", function(req, res){
   Item.find({}, function(err, foundItems){
@@ -49,6 +56,38 @@ app.get("/", function(req, res){
       res.render('list', {listTitle: "Today", newListItems: foundItems});
     }
   });
+});
+
+// create dynamic route to create a whole new list page
+// by typing in a new url address
+
+app.get('/:listName', function(req, res){
+  const requestedName = _.lowerCase(req.params.listName);
+  // const list = new List({
+  //   name: requestedName,
+  //   items: defaultItems
+  // });
+  //
+  // list.save(function(err){
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  List.find({}, function(err, foundLists){
+    foundLists.forEach(function(list){
+      const listName = _.lowerCase(list.name);
+      if (requestedName == listName) {
+        console.log("It's a Match!");
+        res.render("list", {
+          listTitle: list.name,
+          newListItems: list.items
+        });
+        return;
+      }
+    });
+  });
+
 });
 
 app.post("/", function(req, res){
@@ -75,10 +114,6 @@ app.post("/delete", function(req, res){
     }
   });
 
-});
-
-app.get('/work', function(req, res){
-  res.render('list', {listTitle: "Work List", newListItems: workItems});
 });
 
 app.get('/about', function(req, res){
